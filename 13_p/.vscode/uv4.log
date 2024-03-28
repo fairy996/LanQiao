@@ -1,0 +1,16 @@
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ULTR_READ
+    MODULE:  .\Objects\main.obj (MAIN)
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ULTR_READ
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 04F1H
+
+Program Size: data=59.0 xdata=0 code=2066
+creating hex file from ".\Objects\project"...
+".\Objects\project" - 0 Error(s), 2 Warning(s).
+Build Time Elapsed:  00:00:01

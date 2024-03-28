@@ -1,0 +1,1 @@
+"HardWare\Key.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\HardWare) DEBUG OBJECTEXTEND PRINT(.\Listings\Key.lst) TABS (2) OBJECT(.\Objects\Key.obj)

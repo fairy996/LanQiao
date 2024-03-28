@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "sys.h": "c",
+        "stc15f2k60s2.h": "c",
+        "ds1302.h": "c",
+        "onewire.h": "c",
+        "STC15F2K60S2.H": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}
