@@ -1,6 +1,4 @@
 Build target 'Target 1'
-compiling ultr.c...
-ultr.c(38): warning C206: 'send_Pluse': missing function-prototype
 linking...
 *** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
     SYMBOL:  SEND_PLUSE
@@ -13,5 +11,5 @@ linking...
 
 Program Size: data=68.0 xdata=0 code=2668
 creating hex file from ".\Objects\project"...
-".\Objects\project" - 0 Error(s), 3 Warning(s).
-Build Time Elapsed:  00:00:01
+".\Objects\project" - 0 Error(s), 2 Warning(s).
+Build Time Elapsed:  00:00:00

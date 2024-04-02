@@ -1,0 +1,101 @@
+C51 COMPILER V9.60.7.0   KEY                                                               03/29/2024 23:43:38 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\key.obj
+COMPILER INVOKED BY: D:\Program Files\ARM\Core\C51\BIN\C51.EXE ..\hardware\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\hard
+                    -ware) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) TABS(2) OBJECT(.\Objects\key.obj)
+
+line level    source
+
+   1          #include "key.h"
+   2          // 定义列引脚
+   3          sbit C1 = P4 ^ 4;
+   4          sbit C2 = P4 ^ 2;
+   5          sbit C3 = P3 ^ 5;
+   6          sbit C4 = P3 ^ 4;
+   7          // 定义行引脚
+   8          sbit L1 = P3 ^ 0;
+   9          sbit L2 = P3 ^ 1;
+  10          sbit L3 = P3 ^ 2;
+  11          sbit L4 = P3 ^ 3;
+  12          
+  13          unsigned char Key_Scan_Matrix()
+  14          {
+  15   1          unsigned char temp;
+  16   1          C1 = 0;
+  17   1          C2 = C3 = C4 = 1;
+  18   1          if (L1 == 0)
+  19   1              temp = 7;
+  20   1          else if (L2 == 0)
+  21   1              temp = 6;
+  22   1          else if (L3 == 0)
+  23   1              temp = 5;
+  24   1          else if (L4 == 0)
+  25   1              temp = 4;
+  26   1          C2 = 0;
+  27   1          C1 = C3 = C4 = 1;
+  28   1          if (L1 == 0)
+  29   1              temp = 11;
+  30   1          else if (L2 == 0)
+  31   1              temp = 10;
+  32   1          else if (L3 == 0)
+  33   1              temp = 9;
+  34   1          else if (L4 == 0)
+  35   1              temp = 8;
+  36   1          C3 = 0;
+  37   1          C2 = C1 = C4 = 1;
+  38   1          if (L1 == 0)
+  39   1              temp = 15;
+  40   1          else if (L2 == 0)
+  41   1              temp = 14;
+  42   1          else if (L3 == 0)
+  43   1              temp = 13;
+  44   1          else if (L4 == 0)
+  45   1              temp = 12;
+  46   1          C4 = 0;
+  47   1          C2 = C3 = C1 = 1;
+  48   1          if (L1 == 0)
+  49   1              temp = 19;
+  50   1          else if (L2 == 0)
+  51   1              temp = 18;
+  52   1          else if (L3 == 0)
+  53   1              temp = 17;
+  54   1          else if (L4 == 0)
+C51 COMPILER V9.60.7.0   KEY                                                               03/29/2024 23:43:38 PAGE 2   
+
+  55   1              temp = 16;
+  56   1      
+  57   1          P3 = 0xFF;
+  58   1          return temp;
+  59   1      }
+  60          
+  61          unsigned char Key_Scan_freestanding()
+  62          {
+  63   1          unsigned char temp;
+  64   1          if(L1 == 0)
+  65   1              temp = 7;
+  66   1          else if(L2 == 0)
+  67   1              temp = 6;
+  68   1          else if(L3 == 0)
+  69   1              temp = 5;
+  70   1          else if(L4 == 0)
+  71   1              temp = 4;
+  72   1      
+  73   1          P3 = 0xFF;
+  74   1          return temp;
+  75   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    170    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

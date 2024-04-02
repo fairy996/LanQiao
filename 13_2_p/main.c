@@ -187,8 +187,8 @@ void Timer0_Init(void)
 {
     AUXR &= 0xBF; // 定时器时钟12T模式
     TMOD &= 0xF0; // 设置定时器模式
-    TL0 = 0x50;
-    TH0 = 0xFB;
+    TL0 = 0;
+    TH0 = 0;
     TF0 = 0;
     TR0 = 0;
     ET0 = 0;
