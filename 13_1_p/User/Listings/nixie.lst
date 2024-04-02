@@ -1,0 +1,62 @@
+C51 COMPILER V9.60.7.0   NIXIE                                                             04/02/2024 17:33:57 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE NIXIE
+OBJECT MODULE PLACED IN .\Objects\nixie.obj
+COMPILER INVOKED BY: D:\Program Files\ARM\Core\C51\BIN\C51.EXE ..\HardWare\nixie.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Ha
+                    -rdWare) DEBUG OBJECTEXTEND PRINT(.\Listings\nixie.lst) TABS(2) OBJECT(.\Objects\nixie.obj)
+
+line level    source
+
+   1          #include "nixie.h"
+   2          
+   3          unsigned char Seg_Table[] = {
+   4              0xc0, // 0
+   5              0xf9, // 1
+   6              0xa4, // 2
+   7              0xb0, // 3
+   8              0x99, // 4
+   9              0x92, // 5
+  10              0x82, // 6
+  11              0xf8, // 7
+  12              0x80, // 8
+  13              0x90, // 9
+  14              0x88, // A
+  15              0x83, // b
+  16              0xc6, // C
+  17              0xa1, // d
+  18              0x86, // E
+  19              0x8e, // F
+  20              0xFF,  // 空
+  21              0xC1, // U--17
+  22              0xBF //-   18
+  23          };
+  24          unsigned char NiXie_Pos[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+  25          
+  26          void NiXie_Display(unsigned char Location,unsigned char Value,unsigned char point)
+  27          {
+  28   1          P0 = 0xFF;
+  29   1          Init_HC138(7);
+  30   1      
+  31   1          P0 = NiXie_Pos[Location];
+  32   1          Init_HC138(6);
+  33   1      
+  34   1          P0 = Seg_Table[Value];
+  35   1          if(point)
+  36   1              P0 = P0 & 0x7F;
+  37   1          Init_HC138(7);
+  38   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     47    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     27       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

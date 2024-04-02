@@ -2,6 +2,8 @@
     "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
         "sys.h": "c",
-        "led.h": "c"
+        "led.h": "c",
+        "onewire.h": "c",
+        "nixie.h": "c"
     }
 }

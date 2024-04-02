@@ -1,0 +1,10 @@
+".\Objects\main.obj",
+".\Objects\sys.obj",
+".\Objects\ds1302.obj",
+".\Objects\key.obj",
+".\Objects\led.obj",
+".\Objects\nixie.obj",
+".\Objects\onewire.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 
