@@ -4,4 +4,5 @@
 #include "sys.h"
 
 void LED_Display(unsigned char location, unsigned char enable);
+void Relay(unsigned char flag);
 #endif

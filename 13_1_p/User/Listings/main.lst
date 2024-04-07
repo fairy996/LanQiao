@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 17:35:40 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 23:23:55 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -27,19 +27,19 @@ line level    source
   17          // 测量数据
   18          unsigned char temp_para = 23;
   19          unsigned int temp;
-  20          unsigned char Time_Now[3] = {0x00, 0x00, 0x00};
+  20          unsigned char Time_Now[3] = {24, 30, 30};
   21          // 时间数据
-  22          unsigned char Time[3] = {0x07, 0x59, 0x30};
+  22          unsigned char Time[3] = {07, 59, 30};
   23          unsigned int time_5s;
   24          unsigned char time_100ms;
   25          
   26          // 标志位
   27          unsigned char state = 0; // 界面标志 0为温度 1为时间 2为参数
-  28          unsigned char mode = 0;  // 控制模式 0为温度 1为时间
-  29          unsigned char L3_Light_Flag = 0;
-  30          unsigned char Time_View_Flag = 0;//0表示显示时和分,1表示显示分和秒
-  31          unsigned char Int_Time_Flag = 0; //表示当前为整点
-  32          unsigned char Trigger_Flag = 0;  //0表示此时继电器未达到触发状态，1表示继电器吸合
+  28          bit mode = 0;  // 控制模式 0为温度 1为时间
+  29          bit L3_Light_Flag = 0;
+  30          bit Time_View_Flag = 0; // 0表示显示时和分,1表示显示分和秒
+  31          bit Int_Time_Flag = 0;  // 表示当前为整点
+  32          bit Trigger_Flag = 0;   // 0表示此时继电器未达到触发状态，1表示继电器吸合
   33          void Clear_NiXie(void)
   34          {
   35   1          unsigned char i;
@@ -57,12 +57,12 @@ line level    source
   47   1          Key_Slow_Down = 1;
   48   1      
   49   1          Key_Val = Key_Scan_Matrix();
-  50   1          Key_Down = Key_Val & (Key_Val ^ Key_Old);
-  51   1          Key_Up = ~Key_Val & (Key_Val ^ Key_Old);
+  50   1          Key_Down = Key_Val & (Key_Old ^ Key_Val);
+  51   1          Key_Up = ~Key_Val & (Key_Old ^ Key_Val);
   52   1          Key_Old = Key_Val;
   53   1      
   54   1          switch (Key_Down)
-C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 17:35:40 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 23:23:55 PAGE 2   
 
   55   1          {
   56   2          case 12:
@@ -80,144 +80,165 @@ line level    source
   68   2              break;
   69   2          case 16:
   70   2              Clear_NiXie();
-  71   2              if(state == 2)
+  71   2              if (state == 2)
   72   2              {
-  73   3                  if(++temp_para > 99)
-  74   3                      temp_para = 99;
-  75   3              }
-  76   2          case 17:
-  77   2              Clear_NiXie();
-  78   2              if(state == 2)
-  79   2              {
-  80   3                  if(--temp_para < 10)
-  81   3                      temp_para = 10;
-  82   3              }
-  83   2              else if(state == 1)
-  84   2              {
-  85   3                  
-  86   3              }
-  87   2          }
-  88   1      }
-  89          
-  90          void NiXie_pro()
-  91          {
-  92   1          if (NiXie_Slow_Down)
-  93   1              return;
-  94   1          NiXie_Slow_Down = 1;
-  95   1      
-  96   1          temp = Read_Temperature(1);
-  97   1          DS1302_Time_Read(Time_Now);
-  98   1          if(mode == 0 && (temp>temp_para))
-  99   1              Trigger_Flag = 1;
- 100   1          if(mode == 1 && Time_Now[1] == 0 && Time_Now[2] == 0)
- 101   1              Trigger_Flag = 1;
- 102   1          NiXie_Value[0] = 17;
- 103   1          NiXie_Value[1] = state + 1;
- 104   1          if (state == 0)
- 105   1          {
- 106   2              NiXie_Value[5] = temp / 100;
- 107   2              NiXie_Value[6] = temp % 100 / 10;
- 108   2              NiXie_Value[7] = temp % 10;
- 109   2              NiXie_Point[6] = 1;
- 110   2          }
- 111   1          else if(state == 1)
- 112   1          {
- 113   2              if(Time_View_Flag)
- 114   2              {
- 115   3                  NiXie_Value[3] = Time_Now[1] / 10;
- 116   3                  NiXie_Value[4] = Time_Now[1] % 10;
-C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 17:35:40 PAGE 3   
+  73   3                  temp_para += 1;
+  74   3                  if(temp_para > 99)
+  75   3                  {
+  76   4                      temp_para = 99;
+  77   4                  }
+  78   3              }
+  79   2              break;
+  80   2          case 17:
+  81   2              Clear_NiXie();
+  82   2              if (state == 2)
+  83   2              {
+  84   3                  temp_para -= 1;
+  85   3                  if (temp_para < 10)
+  86   3                  {
+  87   4                      temp_para = 10;
+  88   4                  }
+  89   3              }
+  90   2              else if (state == 1)
+  91   2              {
+  92   3                  Time_View_Flag = 1;
+  93   3              }
+  94   2              
+  95   2              break;
+  96   2          }
+  97   1          switch(Key_Up)
+  98   1          {
+  99   2              case 17:
+ 100   2                  Time_View_Flag = 0;
+ 101   2                  break;
+ 102   2          }
+ 103   1      }
+ 104          
+ 105          void NiXie_pro()
+ 106          {
+ 107   1          if (NiXie_Slow_Down)
+ 108   1              return;
+ 109   1          NiXie_Slow_Down = 1;
+ 110   1      
+ 111   1          temp = Read_Temperature();
+ 112   1          DS1302_Time_Read(Time_Now);
+ 113   1          
+ 114   1          NiXie_Value[0] = 17;
+ 115   1          NiXie_Value[1] = state + 1;
+ 116   1          if (state == 0)
+C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 23:23:55 PAGE 3   
 
- 117   3                  NiXie_Value[5] = 18;
- 118   3                  NiXie_Value[6] = Time_Now[2] / 10;
- 119   3                  NiXie_Value[7] = Time_Now[2] % 10;
- 120   3              }
- 121   2              else
- 122   2              {
- 123   3                  NiXie_Value[3] = Time_Now[0] / 10;
- 124   3                  NiXie_Value[4] = Time_Now[0] % 10;
- 125   3                  NiXie_Value[5] = 18;
- 126   3                  NiXie_Value[6] = Time_Now[1] / 10;
- 127   3                  NiXie_Value[7] = Time_Now[1] % 10;
- 128   3              }
- 129   2          }
- 130   1          else if(state == 2)
- 131   1          {
- 132   2              NiXie_Value[6] = temp_para / 10;
- 133   2              NiXie_Value[7] = temp_para % 10;
- 134   2          }
- 135   1      }
- 136          
- 137          void Led_pro()
- 138          {
- 139   1          
- 140   1          LED[0] = (Int_Time_Flag) ? 1 : 0;
- 141   1          LED[1] = (mode == 0);
- 142   1          LED[2] = (Trigger_Flag) ? L3_Light_Flag : 0;
- 143   1      }
- 144          
- 145          void Timer0_Isr(void) interrupt 1
- 146          {
- 147   1          if (++Key_Slow_Down == 10)
- 148   1              Key_Slow_Down = 0;
- 149   1          if (++NiXie_Slow_Down == 200)
- 150   1              NiXie_Slow_Down = 0;
- 151   1          if (++NiXie_Position == 8)
- 152   1              NiXie_Position = 0;
- 153   1          if(++time_100ms == 100)
- 154   1          {
- 155   2              time_100ms = 0;
- 156   2              L3_Light_Flag = ~L3_Light_Flag;
+ 117   1          {
+ 118   2      
+ 119   2              NiXie_Value[5] = temp / 100;
+ 120   2              NiXie_Value[6] = temp % 100 / 10;
+ 121   2              NiXie_Value[7] = temp % 10;
+ 122   2              NiXie_Point[6] = 1;
+ 123   2          }
+ 124   1          else if (state == 1)
+ 125   1          {
+ 126   2              if (Time_View_Flag)
+ 127   2              {
+ 128   3                  NiXie_Value[3] = Time_Now[1] / 10;
+ 129   3                  NiXie_Value[4] = Time_Now[1] % 10;
+ 130   3                  NiXie_Value[5] = 18;
+ 131   3                  NiXie_Value[6] = Time_Now[2] / 10;
+ 132   3                  NiXie_Value[7] = Time_Now[2] % 10;
+ 133   3              }
+ 134   2              else
+ 135   2              {
+ 136   3                  NiXie_Value[3] = Time_Now[0] / 10;
+ 137   3                  NiXie_Value[4] = Time_Now[0] % 10;
+ 138   3                  NiXie_Value[5] = 18;
+ 139   3                  NiXie_Value[6] = Time_Now[1] / 10;
+ 140   3                  NiXie_Value[7] = Time_Now[1] % 10;
+ 141   3              }
+ 142   2          }
+ 143   1          else if (state == 2)
+ 144   1          {
+ 145   2              NiXie_Value[6] = temp_para / 10;
+ 146   2              NiXie_Value[7] = temp_para % 10;
+ 147   2          }
+ 148   1      }
+ 149          
+ 150          void Led_pro()
+ 151          {
+ 152   1          if (Time_Now[1] == 0 && Time_Now[2] == 0 && Int_Time_Flag == 0)
+ 153   1              Int_Time_Flag = 1;
+ 154   1          if(mode == 0)
+ 155   1          {
+ 156   2              Trigger_Flag = (temp > temp_para * 10);
  157   2          }
- 158   1          if(mode & Trigger_Flag)
+ 158   1          else
  159   1          {
- 160   2              if(++time_5s == 5000)
- 161   2              {
- 162   3                  time_5s = 0;
- 163   3                  Trigger_Flag = 0;
- 164   3              }
- 165   2          }
- 166   1          NiXie_Display(NiXie_Position, NiXie_Value[NiXie_Position], NiXie_Point[NiXie_Position]);
- 167   1          LED_Display(NiXie_Position, LED[NiXie_Position]);
- 168   1      }
- 169          
- 170          void Timer0_Init(void) // 1毫秒@12.000MHz
- 171          {
- 172   1          AUXR &= 0x7F; // 定时器时钟12T模式
- 173   1          TMOD &= 0xF0; // 设置定时器模式
- 174   1          TL0 = 0x18;   // 设置定时初始值
- 175   1          TH0 = 0xFC;   // 设置定时初始值
- 176   1          TF0 = 0;      // 清除TF0标志
- 177   1          TR0 = 1;      // 定时器0开始计时
- 178   1          ET0 = 1;      // 使能定时器0中断
-C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 17:35:40 PAGE 4   
+ 160   2              Trigger_Flag = Int_Time_Flag;
+ 161   2          }
+ 162   1          LED[0] = Int_Time_Flag;
+ 163   1          LED[1] = (mode == 0);
+ 164   1          LED[2] = (Trigger_Flag) ? L3_Light_Flag : 0;
+ 165   1      }
+ 166          
+ 167          void Timer0_Isr(void) interrupt 1
+ 168          {
+ 169   1          if (++Key_Slow_Down == 10)
+ 170   1              Key_Slow_Down = 0;
+ 171   1          if (++NiXie_Slow_Down == 50)
+ 172   1              NiXie_Slow_Down = 0;
+ 173   1          if (++NiXie_Position == 8)
+ 174   1              NiXie_Position = 0;
+ 175   1          if (++time_100ms == 100)
+ 176   1          {
+ 177   2              time_100ms = 0;
+ 178   2              L3_Light_Flag = ~L3_Light_Flag;
+C51 COMPILER V9.60.7.0   MAIN                                                              04/02/2024 23:23:55 PAGE 4   
 
- 179   1          EA = 1;       // 使能总中断
- 180   1      }
- 181          
- 182          void main()
- 183          {
- 184   1          Read_Temperature(1);
- 185   1          Init_Sys();
- 186   1          Timer0_Init();
- 187   1          DS1302_Time_Write(Time);
- 188   1          while (1)
- 189   1          {
- 190   2              key_pro();
- 191   2              Led_pro();
- 192   2              NiXie_pro();
- 193   2          }
- 194   1      }
+ 179   2          }
+ 180   1          if(++time_5s == 5000)
+ 181   1          {
+ 182   2              time_5s = 0;
+ 183   2              Int_Time_Flag = 0;
+ 184   2          }
+ 185   1          NiXie_Display(NiXie_Position, NiXie_Value[NiXie_Position], NiXie_Point[NiXie_Position]);
+ 186   1          LED_Display(NiXie_Position, LED[NiXie_Position]);
+ 187   1      }
+ 188          
+ 189          void Timer0_Init(void) // 1毫秒@12.000MHz
+ 190          {
+ 191   1          AUXR &= 0x7F; // 定时器时钟12T模式
+ 192   1          TMOD &= 0xF0; // 设置定时器模式
+ 193   1          TL0 = 0x18;   // 设置定时初始值
+ 194   1          TH0 = 0xFC;   // 设置定时初始值
+ 195   1          TF0 = 0;      // 清除TF0标志
+ 196   1          TR0 = 1;      // 定时器0开始计时
+ 197   1          ET0 = 1;      // 使能定时器0中断
+ 198   1          EA = 1;       // 使能总中断
+ 199   1      }
+ 200          
+ 201          void main()
+ 202          {
+ 203   1          temp = Read_Temperature();
+ 204   1          while (temp == 850)
+ 205   1              temp = Read_Temperature();
+ 206   1          Init_Sys();
+ 207   1          Timer0_Init();
+ 208   1          DS1302_Time_Write(Time);
+ 209   1          while (1)
+ 210   1          {
+ 211   2              key_pro();
+ 212   2              Led_pro();
+ 213   2              NiXie_pro();
+ 214   2          }
+ 215   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    644    ----
+   CODE SIZE        =    681    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =     51    ----
+   DATA SIZE        =     46    ----
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =   ----    ----
+   BIT SIZE         =      5    ----
 END OF MODULE INFORMATION.
 
 

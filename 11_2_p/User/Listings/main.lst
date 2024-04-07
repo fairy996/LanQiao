@@ -1,0 +1,233 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              04/06/2024 23:37:06 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Program Files\ARM\Core\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\HardWare) DEBUG
+                    - OBJECTEXTEND PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "sys.h"
+   2          
+   3          //*************变量声明区***************
+   4          //按键
+   5          unsigned int Key_Slow_Down;
+   6          unsigned char Key_Val;
+   7          unsigned char Key_Up;
+   8          unsigned char Key_Down;
+   9          unsigned char Key_Old;
+  10          //数码管
+  11          unsigned int NiXie_Slow_Down;
+  12          unsigned char NiXie_Location;
+  13          unsigned char NiXie_Value[8] = {16, 16, 16, 16, 16, 16, 16, 16};
+  14          unsigned char NiXie_Dot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+  15          //LED
+  16          unsigned char Led_Value[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+  17          //时间
+  18          unsigned int Time_5s;
+  19          //测量数据
+  20          unsigned int Voltiage_para;
+  21          unsigned char Digital_V;
+  22          unsigned char Analog_V;
+  23          unsigned char Analog_V_Old;
+  24          unsigned char Error_Count = 0;
+  25          //标志位
+  26          unsigned char state = 0;//0 数据界面 1 参数界面 2计数界面
+  27          unsigned char Count = 0;//电压相关计数值
+  28          unsigned char Time_5s_Flag = 0;
+  29          unsigned char Count_Flag = 0;
+  30          //*****************函数*********************
+  31          void Clear_NiXie()
+  32          {
+  33   1          unsigned char i;
+  34   1          for(i = 0; i < 8; i++)
+  35   1          {
+  36   2              NiXie_Value[i] = 16;
+  37   2              NiXie_Dot[i] = 0;
+  38   2          }
+  39   1      }
+  40          
+  41          void Key_pro()
+  42          {
+  43   1          if(Key_Slow_Down)
+  44   1              return;
+  45   1          Key_Slow_Down = 1;
+  46   1      
+  47   1          Key_Val = Key_Scan();
+  48   1          Key_Down = Key_Val & (Key_Val ^ Key_Old);
+  49   1          Key_Up = ~Key_Val & (Key_Val ^ Key_Old);
+  50   1          Key_Old = Key_Val;
+  51   1      
+  52   1          switch(Key_Down)
+  53   1          {
+  54   2          case 12:
+C51 COMPILER V9.60.7.0   MAIN                                                              04/06/2024 23:37:06 PAGE 2   
+
+  55   2              Clear_NiXie();
+  56   2              Error_Count = 0;
+  57   2              if(state == 0)
+  58   2                  state = 1;
+  59   2              else if(state == 1)
+  60   2              {
+  61   3                  state = 2;
+  62   3                  AT24C02_Write(0x01, Voltiage_para / 10);
+  63   3                //AT24C02_Write(0x01, 0);
+  64   3              }
+  65   2              else if(state == 2)
+  66   2                  state = 0;
+  67   2              break;
+  68   2          case 13:
+  69   2              Clear_NiXie();
+  70   2              Error_Count = 0;
+  71   2              if(state == 2)
+  72   2              {
+  73   3                  Count = 0;
+  74   3              }
+  75   2              break;
+  76   2          case 16:
+  77   2              Clear_NiXie();
+  78   2              Error_Count = 0;
+  79   2              if(state == 1)
+  80   2              {
+  81   3                  Voltiage_para += 50;
+  82   3                  if(Voltiage_para > 500)
+  83   3                      Voltiage_para = 0;
+  84   3              }
+  85   2              break;
+  86   2          case 17:
+  87   2              Clear_NiXie();
+  88   2              Error_Count = 0;
+  89   2              if(state == 1)
+  90   2              {
+  91   3                  Voltiage_para -= 50;
+  92   3                  if(Voltiage_para < 0)
+  93   3                      Voltiage_para = 500;
+  94   3              }
+  95   2      
+  96   2              break;
+  97   2          case 25:
+  98   2              //Clear_NiXie();
+  99   2              Error_Count++;
+ 100   2              break;
+ 101   2          }
+ 102   1      }
+ 103          
+ 104          void NiXie_pro()
+ 105          {
+ 106   1          if(NiXie_Slow_Down)
+ 107   1              return;
+ 108   1          NiXie_Slow_Down = 1;
+ 109   1      //    Analog_V_Old = Analog_V;
+ 110   1          Digital_V = adc_read(0x03);
+ 111   1          Analog_V = (Digital_V * 500) / 255;
+ 112   1      //    if(Analog_V_Old > Voltiage_para && Analog_V < Voltiage_para)
+ 113   1      //        Count++;
+ 114   1          if(Analog_V > Voltiage_para)
+ 115   1          {
+ 116   2            Count_Flag = 1;
+C51 COMPILER V9.60.7.0   MAIN                                                              04/06/2024 23:37:06 PAGE 3   
+
+ 117   2          }
+ 118   1          if((Count_Flag == 1) && (Analog_V < Voltiage_para))
+ 119   1          {
+ 120   2            Count++;
+ 121   2            Count_Flag = 0;
+ 122   2          }
+ 123   1          if(Analog_V < Voltiage_para)
+ 124   1              Time_5s_Flag = 1;
+ 125   1          else
+ 126   1              Time_5s_Flag = 0;
+ 127   1          if(state == 0)
+ 128   1          {
+ 129   2              NiXie_Value[0] = 18;
+ 130   2              NiXie_Value[5] = Analog_V / 100;
+ 131   2              NiXie_Value[6] = (Analog_V % 100) / 10;
+ 132   2              NiXie_Value[7] = Analog_V % 10;
+ 133   2              NiXie_Dot[5] = 1;
+ 134   2          }
+ 135   1          else if(state == 1)
+ 136   1          {
+ 137   2              NiXie_Value[0] = 17;
+ 138   2              NiXie_Value[5] = Voltiage_para / 100;
+ 139   2              NiXie_Value[6] = (Voltiage_para % 100) / 10;
+ 140   2              NiXie_Value[7] = Voltiage_para % 10;
+ 141   2              NiXie_Dot[5] = 1;
+ 142   2          }
+ 143   1          else if(state == 2)
+ 144   1          {
+ 145   2              NiXie_Value[0] = 19;
+ 146   2              NiXie_Value[1] = (Count / 1000000) ? (Count / 1000000) : 16;
+ 147   2              NiXie_Value[2] = ((Count % 1000000) / 100000) ? ((Count % 1000000) / 100000) : 16;
+ 148   2              NiXie_Value[3] = ((Count % 100000) / 10000) ? ((Count % 100000) / 10000) : 16;
+ 149   2              NiXie_Value[4] = ((Count % 10000) / 1000) ? ((Count % 10000) / 1000) : 16;
+ 150   2              NiXie_Value[5] = ((Count % 1000) / 100) ? ((Count % 1000) / 100) : 16;
+ 151   2              NiXie_Value[6] = ((Count % 100) / 10) ? ((Count % 100) / 10) : 16;
+ 152   2              NiXie_Value[7] = (Count % 10) ? (Count % 10) : 16;
+ 153   2          }
+ 154   1      }
+ 155          void Led_pro()
+ 156          {
+ 157   1          Led_Value[0] = (Time_5s == 5001);
+ 158   1          Led_Value[1] = (Count % 2);
+ 159   1        Led_Value[2] = (Error_Count >= 3) ? 1 : 0;
+ 160   1      }
+ 161          void Timer0_Isr(void) interrupt 1
+ 162          {
+ 163   1          if(++Key_Slow_Down == 10)
+ 164   1              Key_Slow_Down = 0;
+ 165   1          if(++NiXie_Slow_Down == 200)
+ 166   1              NiXie_Slow_Down = 0;
+ 167   1          if(++NiXie_Location == 8)
+ 168   1              NiXie_Location = 0;
+ 169   1            if(Time_5s_Flag)
+ 170   1            {
+ 171   2              if(++Time_5s >= 5000)
+ 172   2                Time_5s = 5001;
+ 173   2            }
+ 174   1            else
+ 175   1              Time_5s = 0;
+ 176   1          NiXie_Display(NiXie_Location, NiXie_Value[NiXie_Location], NiXie_Dot[NiXie_Location]);
+ 177   1          LED_Display(NiXie_Location, Led_Value[NiXie_Location]);
+ 178   1      }
+C51 COMPILER V9.60.7.0   MAIN                                                              04/06/2024 23:37:06 PAGE 4   
+
+ 179          
+ 180          void Timer0_Init(void)    //1毫秒@12.000MHz
+ 181          {
+ 182   1          AUXR &= 0x7F;     //定时器时钟12T模式
+ 183   1          TMOD &= 0xF0;     //设置定时器模式
+ 184   1          TL0 = 0x18;       //设置定时初始值
+ 185   1          TH0 = 0xFC;       //设置定时初始值
+ 186   1          TF0 = 0;        //清除TF0标志
+ 187   1          TR0 = 1;        //定时器0开始计时
+ 188   1          ET0 = 1;        //使能定时器0中断
+ 189   1          EA = 1;
+ 190   1      }
+ 191          
+ 192          void main()
+ 193          {
+ 194   1          Init_Sys();
+ 195   1          Timer0_Init();
+ 196   1          Voltiage_para = AT24C02_Read(0x01) * 10;
+ 197   1          while(1)
+ 198   1          {
+ 199   2              Key_pro();
+ 200   2              NiXie_pro();
+ 201   2              Led_pro();
+ 202   2          }
+ 203   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1002    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     45    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

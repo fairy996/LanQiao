@@ -1,0 +1,238 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              04/04/2024 10:50:20 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Program Files\ARM\Core\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\HardWare) DEBUG
+                    - OBJECTEXTEND PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "sys.h"
+   2          
+   3          //**********************参数设置************************
+   4          // 按键
+   5          unsigned int Key_Slow_Down;
+   6          unsigned char Key_Val;
+   7          unsigned char Key_Up;
+   8          unsigned char Key_Down;
+   9          unsigned char Key_Old;
+  10          // 数码管
+  11          unsigned int NiXie_Slow_Down;
+  12          unsigned char NiXie_Location;
+  13          unsigned char NiXie_Value[8] = {16, 16, 16, 16, 16, 16, 16, 16};
+  14          unsigned char NiXie_Point[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+  15          // LED
+  16          unsigned char LED_Value[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+  17          // 数据
+  18          unsigned int V_Val_A;          // 实时采集的电压模拟量
+  19          unsigned char V_Val_D;         // 实时采集的电压数字量
+  20          unsigned char V_Channel3_Val;  // 通道3当前电压
+  21          unsigned char V_Channel3_Save; // 通道3缓存电压
+  22          unsigned int Frequence_Val;    // 当前采集的频率
+  23          unsigned int Frequence_Save;   // 缓存的频率
+  24          unsigned int period;
+  25          // 时间变量
+  26          unsigned int time_1s;
+  27          unsigned int time_led;
+  28          // 标志位
+  29          unsigned char state = 0;           // 0 频率 1 周期 2 电压
+  30          unsigned char Channel = 0;                   // 0 光敏 1 电位器
+  31          unsigned char LED_Flag = 1;                  // 1 LED显示  0 LED关闭
+  32          unsigned char long_press_flag = 0; // 长按开始计数标志
+  33          void Clear_NiXie()
+  34          {
+  35   1          unsigned char i;
+  36   1          for (i = 0; i < 8; i++)
+  37   1          {
+  38   2              NiXie_Value[i] = 16;
+  39   2              NiXie_Point[i] = 0;
+  40   2          }
+  41   1      }
+  42          
+  43          void Key_pro()
+  44          {
+  45   1          if (Key_Slow_Down)
+  46   1              return;
+  47   1          Key_Slow_Down = 1;
+  48   1      
+  49   1          Key_Val = Key_Scan();
+  50   1          Key_Down = Key_Val & (Key_Val ^ Key_Old);
+  51   1          Key_Up = ~Key_Val & (Key_Val ^ Key_Old);
+  52   1          Key_Old = Key_Val;
+  53   1      
+  54   1          switch (Key_Down)
+C51 COMPILER V9.60.7.0   MAIN                                                              04/04/2024 10:50:20 PAGE 2   
+
+  55   1          {
+  56   2          case 4:
+  57   2              Clear_NiXie();
+  58   2              if (state == 0)
+  59   2                  state = 1;
+  60   2              else if (state == 1)
+  61   2                  state = 2;
+  62   2              else if (state == 2)
+  63   2                  state = 0;
+  64   2              break;
+  65   2          case 5:
+  66   2              Clear_NiXie();
+  67   2              if (state == 2)
+  68   2                  Channel = ~Channel;
+  69   2              break;
+  70   2          case 6:
+  71   2              Clear_NiXie();
+  72   2              V_Channel3_Save = V_Channel3_Val;
+  73   2              break;
+  74   2          case 7:
+  75   2              Clear_NiXie();
+  76   2              Frequence_Save = Frequence_Val;
+  77   2              long_press_flag = 1;
+  78   2              break;
+  79   2          }
+  80   1          switch (Key_Up)
+  81   1          {
+  82   2          case 7:
+  83   2              Clear_NiXie();
+  84   2              if (time_led >= 1000)
+  85   2                  LED_Flag = ~LED_Flag;
+  86   2              long_press_flag = 0;
+  87   2              break;
+  88   2          }
+  89   1      }
+  90          
+  91          void NiXie_pro()
+  92          {
+  93   1          if (NiXie_Slow_Down)
+  94   1              return;
+  95   1          NiXie_Slow_Down = 1;
+  96   1      
+  97   1          if (state == 0)
+  98   1          {
+  99   2              NiXie_Value[0] = 15;
+ 100   2              NiXie_Value[1] = (Frequence_Val / 1000000) ? (Frequence_Val / 1000000) : 16;
+ 101   2              NiXie_Value[2] = ((Frequence_Val % 1000000) / 100000) ? ((Frequence_Val % 1000000) / 100000) : 16;
+ 102   2              NiXie_Value[3] = ((Frequence_Val % 100000) / 10000) ? ((Frequence_Val % 100000) / 10000) : 16;
+ 103   2              NiXie_Value[4] = ((Frequence_Val % 10000) / 1000) ? ((Frequence_Val % 10000) / 1000) : 16;
+ 104   2              NiXie_Value[5] = ((Frequence_Val % 1000) / 100) ? ((Frequence_Val % 1000) / 100) : 16;
+ 105   2              NiXie_Value[6] = ((Frequence_Val % 100) / 10) ? ((Frequence_Val % 100) / 10) : 16;
+ 106   2              NiXie_Value[7] = (Frequence_Val % 10) ? (Frequence_Val % 10) : 16;
+ 107   2          }
+ 108   1          else if (state == 1)
+ 109   1          {
+ 110   2              NiXie_Value[0] = 17;
+ 111   2              NiXie_Value[1] = (period / 1000000) ? (period / 1000000) : 16;
+ 112   2              NiXie_Value[2] = ((period % 1000000) / 100000) ? ((period % 1000000) / 100000) : 16;
+ 113   2              NiXie_Value[3] = ((period % 100000) / 10000) ? ((period % 100000) / 10000) : 16;
+ 114   2              NiXie_Value[4] = ((period % 10000) / 1000) ? ((period % 10000) / 1000) : 16;
+ 115   2              NiXie_Value[5] = ((period % 1000) / 100) ? ((period % 1000) / 100) : 16;
+ 116   2              NiXie_Value[6] = ((period % 100) / 10) ? ((period % 100) / 10) : 16;
+C51 COMPILER V9.60.7.0   MAIN                                                              04/04/2024 10:50:20 PAGE 3   
+
+ 117   2              NiXie_Value[7] = (period % 10) ? (period % 10) : 16;
+ 118   2          }
+ 119   1          else if (state == 2)
+ 120   1          {
+ 121   2              NiXie_Value[0] = 18;
+ 122   2              NiXie_Value[1] = 19;
+ 123   2              NiXie_Value[2] = (Channel) ? 3 : 1;
+ 124   2              NiXie_Value[5] = V_Val_A / 100;
+ 125   2              NiXie_Value[6] = (V_Val_A % 100) / 10;
+ 126   2              NiXie_Value[7] = V_Val_A % 10;
+ 127   2              NiXie_Point[5] = 1;
+ 128   2          }
+ 129   1      }
+ 130          
+ 131          void Led_pro()
+ 132          {
+ 133   1          if (~Channel)
+ 134   1              V_Val_D = adc_read(0x01);
+ 135   1          else
+ 136   1              V_Val_D = adc_read(0x03);
+ 137   1          V_Val_A = (V_Val_D * 100) / 255 * 5;
+ 138   1          LED_Value[0] = ((V_Channel3_Val > V_Channel3_Save) && (LED_Flag));
+ 139   1          LED_Value[1] = ((Frequence_Val > Frequence_Save) && (LED_Flag));
+ 140   1          LED_Value[2] = ((state == 0) && (LED_Flag));
+ 141   1          LED_Value[3] = ((state == 1) && (LED_Flag));
+ 142   1          LED_Value[4] = ((state == 2) && (LED_Flag));
+ 143   1      }
+ 144          
+ 145          void Timer1_Isr(void) interrupt 3
+ 146          {
+ 147   1          if (++Key_Slow_Down == 10)
+ 148   1              Key_Slow_Down = 0;
+ 149   1          if (++NiXie_Slow_Down == 200)
+ 150   1              NiXie_Slow_Down = 0;
+ 151   1          if (++NiXie_Location == 8)
+ 152   1              NiXie_Location = 0;
+ 153   1      
+ 154   1          if (++time_1s == 1000)
+ 155   1          {
+ 156   2              time_1s = 0;
+ 157   2              Frequence_Val = (TH0 << 8) | TL0;
+ 158   2              period = 1000000 / Frequence_Val;
+ 159   2              TH0 = 0;
+ 160   2              TL0 = 0;
+ 161   2          }
+ 162   1          if (long_press_flag)
+ 163   1          {
+ 164   2              if (++time_led >= 1000)
+ 165   2              {
+ 166   3                  time_led = 1001;
+ 167   3              }
+ 168   2          }
+ 169   1          NiXie_Display(NiXie_Location, NiXie_Value[NiXie_Location], NiXie_Point[NiXie_Location]);
+ 170   1          LED_Display(NiXie_Location, LED_Value[NiXie_Location]);
+ 171   1      }
+ 172          
+ 173          void Timer1_Init(void) // 1毫秒@12.000MHz
+ 174          {
+ 175   1          AUXR &= 0xBF; // 定时器时钟12T模式
+ 176   1          TMOD &= 0x0F; // 设置定时器模式
+ 177   1          TL1 = 0x18;   // 设置定时初始值
+ 178   1          TH1 = 0xFC;   // 设置定时初始值
+C51 COMPILER V9.60.7.0   MAIN                                                              04/04/2024 10:50:20 PAGE 4   
+
+ 179   1          TF1 = 0;      // 清除TF1标志
+ 180   1          TR1 = 1;      // 定时器1开始计时
+ 181   1          ET1 = 1;      // 使能定时器1中断
+ 182   1          EA = 1;
+ 183   1      }
+ 184          
+ 185          void Timer0_Init(void) // 1毫秒@12.000MHz
+ 186          {
+ 187   1          AUXR &= 0x7F; // 定时器时钟12T模式
+ 188   1          TMOD &= 0xF0; // 设置定时器模式
+ 189   1          TMOD |= 0x05; // 设置定时器模式
+ 190   1          TL0 = 0;      // 设置定时初始值
+ 191   1          TH0 = 0;      // 设置定时初始值
+ 192   1          TF0 = 0;      // 清除TF0标志
+ 193   1          TR0 = 1;      // 定时器0开始计时
+ 194   1      }
+ 195          
+ 196          void main()
+ 197          {
+ 198   1          Init_Sys();
+ 199   1          Timer0_Init();
+ 200   1          Timer1_Init();
+ 201   1      
+ 202   1          while (1)
+ 203   1          {
+ 204   2              Led_pro();
+ 205   2              NiXie_pro();
+ 206   2              Key_pro();
+ 207   2          }
+ 208   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1369    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     52    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

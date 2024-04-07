@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   ONEWIRE                                                           04/02/2024 17:37:04 PAGE 1   
+C51 COMPILER V9.60.7.0   ONEWIRE                                                           04/02/2024 23:19:58 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE ONEWIRE
@@ -62,7 +62,7 @@ line level    source
   51   1        return dat;
   52   1      }
   53          
-C51 COMPILER V9.60.7.0   ONEWIRE                                                           04/02/2024 17:37:04 PAGE 2   
+C51 COMPILER V9.60.7.0   ONEWIRE                                                           04/02/2024 23:19:58 PAGE 2   
 
   54          //
   55          bit init_ds18b20(void)
@@ -81,14 +81,14 @@ line level    source
   68   1        return initflag;
   69   1      }
   70          
-  71          unsigned int Read_Temperature(unsigned char dot)
+  71          unsigned int Read_Temperature()
   72          {
   73   1        unsigned int temp;
   74   1        unsigned char LSB, HSB;
   75   1        init_ds18b20();
   76   1        Write_DS18B20(0xcc); // rom
   77   1        Write_DS18B20(0x44); // convert
-  78   1        Delay_OneWire(800);  // 等待转换完成
+  78   1        //Delay_OneWire(800);  // 等待转换完成
   79   1      
   80   1        init_ds18b20();
   81   1        Write_DS18B20(0xCC);
@@ -96,28 +96,16 @@ line level    source
   83   1        LSB = Read_DS18B20();
   84   1        HSB = Read_DS18B20();
   85   1        temp = (HSB << 8) | LSB;
-  86   1        switch (dot)
-  87   1        {
-  88   2        case 0:
-  89   2          temp = temp * 0.0625;
-  90   2          break;
-  91   2        case 1:
-  92   2          temp = temp * 0.625;
-  93   2          break;
-  94   2        case 2:
-  95   2          temp = temp * 6.25;
-  96   2          break;
-  97   2        }
-  98   1        return temp;
-  99   1      }
+  86   1        return ((HSB << 8) | LSB) / 1.60f;
+  87   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    236    ----
+   CODE SIZE        =    186    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       1
+   DATA SIZE        =   ----       2
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----       1
 END OF MODULE INFORMATION.

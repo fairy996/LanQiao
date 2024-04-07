@@ -68,14 +68,14 @@ bit init_ds18b20(void)
 	return initflag;
 }
 
-unsigned int Read_Temperature(unsigned char dot)
+unsigned int Read_Temperature()
 {
 	unsigned int temp;
 	unsigned char LSB, HSB;
 	init_ds18b20();
 	Write_DS18B20(0xcc); // rom
 	Write_DS18B20(0x44); // convert
-	Delay_OneWire(800);	 // 等待转换完成
+	//Delay_OneWire(800);	 // 等待转换完成
 
 	init_ds18b20();
 	Write_DS18B20(0xCC);
@@ -83,17 +83,5 @@ unsigned int Read_Temperature(unsigned char dot)
 	LSB = Read_DS18B20();
 	HSB = Read_DS18B20();
 	temp = (HSB << 8) | LSB;
-	switch (dot)
-	{
-	case 0:
-		temp = temp * 0.0625;
-		break;
-	case 1:
-		temp = temp * 0.625;
-		break;
-	case 2:
-		temp = temp * 6.25;
-		break;
-	}
-	return temp;
+	return ((HSB << 8) | LSB) / 1.60f;
 }

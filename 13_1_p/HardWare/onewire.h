@@ -3,5 +3,5 @@
 
 #include "sys.h"
 
-unsigned int Read_Temperature(unsigned char dot);
+unsigned int Read_Temperature();
 #endif
