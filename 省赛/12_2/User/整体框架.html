@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/markmap-toolbar@0.16.0/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://unpkg.com/d3@7.8.5/dist/d3.min.js"></script><script src="https://unpkg.com/markmap-view@0.16.0/dist/browser/index.js"></script><script src="https://unpkg.com/markmap-toolbar@0.16.0/dist/index.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+            })(() => window.markmap,null,{"content":"12届第二套","children":[{"content":"数码管","children":[{"content":"频率显示界面","children":[{"content":"F  D100Hz","children":[],"payload":{"lines":"3,4"}},{"content":"7位数码管显示频率，当数据不足7位时，高位数码管熄灭","children":[],"payload":{"lines":"4,5"}}],"payload":{"lines":"2,5"}},{"content":"周期显示界面","children":[{"content":"N  T","children":[],"payload":{"lines":"6,7"}},{"content":"7位数码管显示周期，当数据不足7位时，高位数码管熄灭,周期单位为us","children":[],"payload":{"lines":"7,8"}}],"payload":{"lines":"5,8"}},{"content":"电压显示界面","children":[{"content":"U 通道   电压值","children":[],"payload":{"lines":"9,10"}},{"content":"光敏通道的编号为1，电位器通道编号为3","children":[],"payload":{"lines":"10,11"}}],"payload":{"lines":"8,11"}}],"payload":{"lines":"1,2"}},{"content":"按键 ——独立按键","children":[{"content":"S4","children":[{"content":"界面切换按键","children":[],"payload":{"lines":"13,14"}},{"content":"频率---&gt;周期----&gt;电压---&gt;频率","children":[],"payload":{"lines":"14,15"}}],"payload":{"lines":"12,15"}},{"content":"S5","children":[{"content":"电压通道切换按键，仅在电压界面下有效","children":[],"payload":{"lines":"16,17"}},{"content":"通道1---&gt;通道3---&gt;通道1","children":[],"payload":{"lines":"17,18"}}],"payload":{"lines":"15,18"}},{"content":"S6","children":[{"content":"在任何状态下都有效","children":[],"payload":{"lines":"19,20"}},{"content":"通道3数据缓存按键","children":[],"payload":{"lines":"20,21"}}],"payload":{"lines":"18,21"}},{"content":"S7","children":[{"content":"在任何界面下都有效","children":[],"payload":{"lines":"22,23"}},{"content":"频率缓存按键，按下时保存当前采集频率","children":[],"payload":{"lines":"23,24"}},{"content":"长按S7一秒钟为切换LED显示功能的目的","children":[],"payload":{"lines":"24,25"}}],"payload":{"lines":"21,25"}}],"payload":{"lines":"11,12"}},{"content":"LED","children":[{"content":"L1 :通道3的实时电压数据大于缓存电压数据，L1点亮，否则熄灭","children":[],"payload":{"lines":"26,27"}},{"content":"L2:实时频率大于保存的频率，L2点亮","children":[],"payload":{"lines":"27,28"}},{"content":"L3:频率界面L3点亮","children":[],"payload":{"lines":"28,29"}},{"content":"L4:周期界面L4点亮","children":[],"payload":{"lines":"29,30"}},{"content":"L5:电压界面L5点亮","children":[],"payload":{"lines":"30,31"}}],"payload":{"lines":"25,26"}}],"payload":{"lines":"0,1"}},{})</script>
+</body>
+</html>

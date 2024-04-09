@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/markmap-toolbar@0.16.0/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://unpkg.com/d3@7.8.5/dist/d3.min.js"></script><script src="https://unpkg.com/markmap-view@0.16.0/dist/browser/index.js"></script><script src="https://unpkg.com/markmap-toolbar@0.16.0/dist/index.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+            })(() => window.markmap,null,{"content":"第十一届第一套省赛","children":[{"content":"数码管","children":[{"content":"数据界面","children":[{"content":"C  温度","children":[],"payload":{"lines":"3,4"}},{"content":"当前温度取整数","children":[],"payload":{"lines":"4,5"}}],"payload":{"lines":"2,5"}},{"content":"参数界面","children":[{"content":"P  T上 T下","children":[],"payload":{"lines":"6,7"}},{"content":"温度上下限也均为整数","children":[],"payload":{"lines":"7,8"}}],"payload":{"lines":"5,8"}}],"payload":{"lines":"1,2"}},{"content":"按键","children":[{"content":"S4","children":[{"content":"界面切换按键","children":[],"payload":{"lines":"10,11"}},{"content":"两个界面相互切换即可","children":[],"payload":{"lines":"11,12"}}],"payload":{"lines":"9,12"}},{"content":"S5","children":[{"content":"参数选择按键，按下更改现在所选择的参数","children":[],"payload":{"lines":"13,14"}}],"payload":{"lines":"12,14"}},{"content":"S6","children":[{"content":"当前所选择参数加1","children":[],"payload":{"lines":"15,16"}}],"payload":{"lines":"14,16"}},{"content":"S7","children":[{"content":"当前所选择参数减1","children":[],"payload":{"lines":"17,18"}}],"payload":{"lines":"16,18"}},{"content":"注意事项：","children":[{"content":"S6 S7仅在参数界面有效","children":[],"payload":{"lines":"19,20"}},{"content":"参数范围理应设置在99内，不然显示的位置不够","children":[],"payload":{"lines":"20,21"}},{"content":"每次到参数界面时默认选择的是下限","children":[],"payload":{"lines":"21,22"}},{"content":"从参数界面切换到数据界面是要判断参数是否合理，否则退回切换前的参数","children":[],"payload":{"lines":"22,23"}}],"payload":{"lines":"18,23"}}],"payload":{"lines":"8,9"}},{"content":"LED","children":[{"content":"L1: T &gt; Tmax时点亮","children":[],"payload":{"lines":"24,25"}},{"content":"L2: Tmin &lt;= T &lt;= Tmax时点亮","children":[],"payload":{"lines":"25,26"}},{"content":"L3: T &lt; Tmin时点亮","children":[],"payload":{"lines":"26,27"}},{"content":"L4: 参数设置错误时点亮，直到下一次正确设置熄灭","children":[],"payload":{"lines":"27,28"}}],"payload":{"lines":"23,24"}},{"content":"DAC输出","children":[{"content":"T &gt; Tmax时输出4V","children":[],"payload":{"lines":"29,30"}},{"content":"Tmin &lt;= T &lt;= Tmax时输出3V","children":[],"payload":{"lines":"30,31"}},{"content":"T &lt; Tmin时输出2V","children":[],"payload":{"lines":"31,32"}}],"payload":{"lines":"28,29"}},{"content":"初始状态","children":[{"content":"数据显示界面","children":[],"payload":{"lines":"33,34"}},{"content":"温度上限30，温度下限20","children":[],"payload":{"lines":"34,35"}}],"payload":{"lines":"32,33"}}],"payload":{"lines":"0,1"}},{})</script>
+</body>
+</html>

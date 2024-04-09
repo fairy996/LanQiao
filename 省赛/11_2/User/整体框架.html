@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/markmap-toolbar@0.16.0/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://unpkg.com/d3@7.8.5/dist/d3.min.js"></script><script src="https://unpkg.com/markmap-view@0.16.0/dist/browser/index.js"></script><script src="https://unpkg.com/markmap-toolbar@0.16.0/dist/index.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+            })(() => window.markmap,null,{"content":"十一届第二套","children":[{"content":"数码管","children":[{"content":"数据界面","children":[{"content":"U   电压","children":[],"payload":{"lines":"3,4"}},{"content":"电压为电位器对应的电压值","children":[],"payload":{"lines":"4,5"}}],"payload":{"lines":"2,5"}},{"content":"参数界面","children":[{"content":"P  参数","children":[],"payload":{"lines":"6,7"}},{"content":"电压参数，两位小数","children":[],"payload":{"lines":"7,8"}}],"payload":{"lines":"5,8"}},{"content":"计数界面","children":[{"content":"N 计数值","children":[],"payload":{"lines":"9,10"}},{"content":"当电压每次降低过程中经过VP时计数值加1，计数值无上限","children":[],"payload":{"lines":"10,11"}}],"payload":{"lines":"8,11"}}],"payload":{"lines":"1,2"}},{"content":"按键","children":[{"content":"S12","children":[{"content":"界面切换按键","children":[],"payload":{"lines":"13,14"}},{"content":"数据界面---&gt;参数界面---&gt;计数界面---&gt;计数界面","children":[],"payload":{"lines":"14,15"}}],"payload":{"lines":"12,15"}},{"content":"S13","children":[{"content":"清零按键，计数值清零","children":[],"payload":{"lines":"16,17"}}],"payload":{"lines":"15,17"}},{"content":"S16","children":[{"content":"电压参数增加0.5V，达到5V时清零","children":[],"payload":{"lines":"18,19"}}],"payload":{"lines":"17,19"}},{"content":"S17","children":[{"content":"电压参数减小0.5V，达到0时变为5V","children":[],"payload":{"lines":"20,21"}}],"payload":{"lines":"19,21"}},{"content":"注意点","children":[{"content":"参数设置按钮只在参数界面下有效","children":[],"payload":{"lines":"22,23"}},{"content":"清零按钮只在计数界面有效","children":[],"payload":{"lines":"23,24"}},{"content":"从参数界面切换到计数界面时，将VP放大十倍存储到E2PROM中","children":[],"payload":{"lines":"24,25"}}],"payload":{"lines":"21,25"}}],"payload":{"lines":"11,12"}},{"content":"LED","children":[{"content":"L1","children":[{"content":"采集电压连续5s小于电压参数时L1点亮","children":[],"payload":{"lines":"27,28"}}],"payload":{"lines":"26,28"}},{"content":"L2","children":[{"content":"计数值为奇数时点亮，否则熄灭","children":[],"payload":{"lines":"29,30"}}],"payload":{"lines":"28,30"}},{"content":"L3","children":[{"content":"连续三次无效按键，L3点亮否则熄灭","children":[],"payload":{"lines":"31,32"}}],"payload":{"lines":"30,32"}}],"payload":{"lines":"25,26"}},{"content":"初始状态","children":[{"content":"数据显示界面","children":[],"payload":{"lines":"33,34"}},{"content":"计数值为0，L2熄灭","children":[],"payload":{"lines":"34,35"}},{"content":"从E2PROM中读取数据并作为电压参数P;","children":[],"payload":{"lines":"35,36"}}],"payload":{"lines":"32,33"}}],"payload":{"lines":"0,1"}},{})</script>
+</body>
+</html>

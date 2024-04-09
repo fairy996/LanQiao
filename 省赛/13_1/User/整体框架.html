@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/markmap-toolbar@0.16.0/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://unpkg.com/d3@7.8.5/dist/d3.min.js"></script><script src="https://unpkg.com/markmap-view@0.16.0/dist/browser/index.js"></script><script src="https://unpkg.com/markmap-toolbar@0.16.0/dist/index.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+            })(() => window.markmap,null,{"content":"13届题目1","children":[{"content":"数码管显示","children":[{"content":"温度显示界面","children":[{"content":"U1   23.5","children":[],"payload":{"lines":"3,4"}},{"content":"温度数据为小数点后一位","children":[],"payload":{"lines":"4,5"}}],"payload":{"lines":"2,5"}},{"content":"时间显示界面","children":[{"content":"U2 HH-MM","children":[],"payload":{"lines":"6,7"}},{"content":"显示时间格式为24小时制","children":[],"payload":{"lines":"7,8"}}],"payload":{"lines":"5,8"}},{"content":"参数界面","children":[{"content":"U3 温度参数","children":[],"payload":{"lines":"9,10"}}],"payload":{"lines":"8,10"}}],"payload":{"lines":"1,2"}},{"content":"按键控制 按键设置为矩阵键盘模式","children":[{"content":"S12","children":[{"content":"界面切换按键","children":[],"payload":{"lines":"12,13"}},{"content":"温度---&gt;时间---&gt;参数---&gt;温度","children":[],"payload":{"lines":"13,14"}}],"payload":{"lines":"11,14"}},{"content":"S13","children":[{"content":"模式控制按键","children":[],"payload":{"lines":"15,16"}},{"content":"温度控制---&gt;时间控制---&gt;温度控制","children":[],"payload":{"lines":"16,17"}}],"payload":{"lines":"14,17"}},{"content":"S16","children":[{"content":"参数设置界面下有效","children":[],"payload":{"lines":"18,19"}},{"content":"作用为温度参数数值加1","children":[],"payload":{"lines":"19,20"}}],"payload":{"lines":"17,20"}},{"content":"S17","children":[{"content":"参数设置界面","children":[{"content":"作用为温度参数数值减1","children":[],"payload":{"lines":"22,23"}}],"payload":{"lines":"21,23"}},{"content":"时间显示界面","children":[{"content":"按下时时间按照分秒的格式显示，分和秒替换掉原来的时和分","children":[],"payload":{"lines":"24,25"}}],"payload":{"lines":"23,25"}}],"payload":{"lines":"20,25"}}],"payload":{"lines":"10,11"}},{"content":"DS18B20","children":[{"content":"上电初始温度参数为23","children":[],"payload":{"lines":"26,27"}},{"content":"温度参数范围为10~99","children":[],"payload":{"lines":"27,28"}}],"payload":{"lines":"25,26"}},{"content":"继电器","children":[{"content":"温度控制模式","children":[{"content":"温度高于温度参数继电器吸合否则继电器断开","children":[],"payload":{"lines":"30,31"}}],"payload":{"lines":"29,31"}},{"content":"时间控制模式","children":[{"content":"每个整点后，继电器吸合5s后断开","children":[],"payload":{"lines":"32,33"}}],"payload":{"lines":"31,33"}}],"payload":{"lines":"28,29"}},{"content":"LED显示","children":[{"content":"L1:整点时L1点亮，5s后熄灭","children":[],"payload":{"lines":"34,35"}},{"content":"L2:温度控制模式下点亮，否则熄灭","children":[],"payload":{"lines":"35,36"}},{"content":"L3:继电器吸合时其以0.1s为间隔闪烁，否则熄灭","children":[],"payload":{"lines":"36,37"}}],"payload":{"lines":"33,34"}},{"content":"初始状态","children":[{"content":"温度显示界面","children":[],"payload":{"lines":"38,39"}},{"content":"温度控制模式","children":[],"payload":{"lines":"39,40"}},{"content":"温度参数为23","children":[],"payload":{"lines":"40,41"}}],"payload":{"lines":"37,38"}}],"payload":{"lines":"0,1"}},{})</script>
+</body>
+</html>
