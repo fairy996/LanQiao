@@ -3,6 +3,6 @@
 
 #include "sys.h"
 
-unsigned int Measure_Distance();
+unsigned char Measure_Distance();
 
 #endif

@@ -4,7 +4,7 @@
             "name": "Target 1",
             "includePath": [
                 "D:\\Program Files\\ARM\\Core\\C51\\INC",
-                "f:\\personal_promotion\\personal_project\\flushbonading\\Development_board_project\\89C51\\demo\\LanQiaoBei\\past_exam_paper\\13_p"
+                "f:\\personal_promotion\\personal_project\\flushbonading\\Development_board_project\\89C51\\demo\\LanQiaoBei\\past_exam_paper\\省赛\\13_2"
             ],
             "defines": [
                 "__C51__",

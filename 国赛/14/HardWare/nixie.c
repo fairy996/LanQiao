@@ -21,7 +21,7 @@ unsigned char Seg_Table[] =
         0x8e, // F
         0xFF, // mie  16
         0x8C,  // P  17
-        0x8F  // -  18
+        0xBF  // -  18
 };
 
 void Nixie_Display(unsigned char Location, unsigned char Value, unsigned char Dot)

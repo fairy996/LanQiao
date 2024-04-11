@@ -17,6 +17,7 @@ unsigned char Led_Value[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 // 时间变量
 unsigned char time_100ms;
+unsigned char time_500ms;
 // 数据
 unsigned int temp_val;
 unsigned int distance_val;
@@ -27,10 +28,10 @@ unsigned int speed;
 unsigned char dac_limit;
 unsigned char dac_out;
 // 标志位
-unsigned char distance_unit;     // 0 cm 1 m
-unsigned char para_flag;         // 0 距离参数 1 温度参数
+bit distance_unit = 0;           // 0 cm 1 m
+bit para_flag = 0;     // 0 距离参数 1 温度参数
 unsigned char factory_state = 0; // 0 校准值 1 介质设置 2 DAC输出设置
-unsigned char state;             // 0 测距 1 参数 2 工厂
+unsigned char state = 340;       // 0 测距 1 参数 2 工厂
 unsigned char Led_light;
 unsigned char Relay_flag = 0; // 0断开 1吸合
 void Init_State()
@@ -60,25 +61,39 @@ void Key_pro()
     Key_Slow_Down = 1;
 
     Key_Val = Key_Scan();
-    Key_Down = Key_Val & (Key_Val ^ Key_Old);
-    Key_Up = ~Key_Val & (Key_Val ^ Key_Old);
+    Key_Down = Key_Val & (Key_Old ^ Key_Val); // 捕捉按键下降沿
+    Key_Up = ~Key_Val & (Key_Old ^ Key_Val);  // 捕捉按键上降沿
     Key_Old = Key_Val;
 
-    if (Key_Down == 4)
+    switch (Key_Down)
     {
+    case 4:
+        Clear_NiXie();
         if (state == 0)
+        {
             state = 1;
+        }
         else if (state == 1)
+        {
             state = 2;
+        }
+
         else if (state == 2)
+        {
             state = 0;
-    }
-    else if (Key_Down == 5)
-    {
+        }
+        break;
+    case 5:
+        Clear_NiXie();
         if (state == 0)
+        {
             distance_unit = ~distance_unit;
+        }
         else if (state == 1)
-            para_flag = ~para_flag;
+        {
+            para_flag ^= 1;
+        }
+
         else if (state == 2)
         {
             if (factory_state == 0)
@@ -88,21 +103,25 @@ void Key_pro()
             else if (factory_state == 2)
                 factory_state = 0;
         }
-    }
-    else if (Key_Down == 8)
-    {
+        break;
+    case 8:
+        Clear_NiXie();
         if (state == 1)
         {
             if (para_flag)
             {
                 if (++temp_para == 80)
+                {
                     temp_para = 80;
+                }
             }
             else
             {
                 distance_para += 10;
                 if (distance_para >= 99)
+                {
                     distance_para = 99;
+                }
             }
         }
         else if (state == 2)
@@ -111,38 +130,45 @@ void Key_pro()
             {
                 Calibration += 5;
                 if (Calibration >= 90)
+                {
                     Calibration = 90;
+                }
             }
             else if (factory_state == 1)
             {
                 speed += 10;
                 if (speed >= 9990)
+                {
                     speed = 9990;
+                }
             }
             else if (factory_state == 2)
             {
                 if (++dac_limit == 20)
+                {
                     dac_limit = 20;
+                }
             }
         }
-        else if (state == 0) // 记录接下来6s超声波距离
-        {
-        }
-    }
-    else if (Key_Down == 9)
-    {
+        break;
+    case 9:
+        Clear_NiXie();
         if (state == 1)
         {
             if (para_flag)
             {
                 if (--temp_para == 0)
+                {
                     temp_para = 0;
+                }
             }
             else
             {
                 distance_para -= 10;
                 if (distance_para <= 10)
+                {
                     distance_para = 10;
+                }
             }
         }
         else if (state == 2)
@@ -151,23 +177,27 @@ void Key_pro()
             {
                 Calibration -= 5;
                 if (Calibration <= -90)
+                {
                     Calibration = -90;
+                }
             }
             else if (factory_state == 1)
             {
                 speed -= 10;
                 if (speed <= 10)
+                {
                     speed = 10;
+                }
             }
             else if (factory_state == 2)
             {
                 if (--dac_limit == 1)
+                {
                     dac_limit = 1;
+                }
             }
         }
-        else if (state == 0) // DAC输出记录的数据结果
-        {
-        }
+        break;
     }
 }
 
@@ -177,12 +207,16 @@ void NiXie_pro()
         return;
     NiXie_Slow_Down = 1;
 
-    temp_val = Read_Temperature();
-    distance_val = (Measure_Distance() * speed) / 2 + Calibration;
+    // temp_val = Read_Temperature();
+
     if ((distance_val >= distance_para + 5) && (distance_val <= distance_para + 5) && (temp_val <= temp_para * 10))
+    {
         Relay_flag = 1;
+    }
     else
+    {
         Relay_flag = 0;
+    }
     if (state == 0)
     {
         NiXie_Value[0] = temp_val / 100;
@@ -220,12 +254,12 @@ void NiXie_pro()
                 }
             }
         }
-        NiXie_Dot[5] = distance_unit;
+        NiXie_Dot[5] = (distance_unit);
     }
     else if (state == 1)
     {
         NiXie_Value[0] = 17;
-        if (para_flag)
+        if (para_flag == 1)
         {
             NiXie_Value[1] = 2;
             NiXie_Value[6] = temp_para / 10;
@@ -342,6 +376,11 @@ void Timer0_Isr(void) interrupt 1
         NiXie_Slow_Down = 0;
     if (++NiXie_Location == 8)
         NiXie_Location = 0;
+    if (++time_500ms == 500)
+    {
+        time_500ms = 0;
+        // distance_val = Measure_Distance();
+    }
     if (state == 2)
     {
         if (++time_100ms == 100)
@@ -364,25 +403,20 @@ void Timer0_Init(void) // 1毫秒@12.000MHz
     TF0 = 0;      // 清除TF0标志
     TR0 = 1;      // 定时器0开始计时
     ET0 = 1;      // 使能定时器0中断
-    EA = 1;
-}
-void Timer1_Init(void) // 1毫秒@12.000MHz
-{
-    AUXR &= 0xBF; // 定时器时钟12T模式
-    TMOD &= 0x0F; // 设置定时器模式
-    TMOD |= 0x50; // 定时器1设置为计数模式
-    TL1 = 0;      // 设置定时初始值
-    TH1 = 0;      // 设置定时初始值
-    TF1 = 0;      // 清除TF1标志
-    TR1 = 0;      // 定时器1开始计时
+    EA = 1;       //
 }
 
 void main()
 {
+    temp_val = Read_Temperature();
+    while (temp_val == 850)
+    {
+        temp_val = Read_Temperature();
+    }
     Init_Sys();
     Init_State();
     Timer0_Init();
-    Timer1_Init();
+    // Timer1_Init();
     while (1)
     {
         Key_pro();

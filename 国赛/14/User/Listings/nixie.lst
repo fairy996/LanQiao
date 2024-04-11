@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   NIXIE                                                             04/09/2024 16:43:17 PAGE 1   
+C51 COMPILER V9.60.7.0   NIXIE                                                             04/09/2024 22:33:45 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE NIXIE
@@ -31,7 +31,7 @@ line level    source
   21                  0x8e, // F
   22                  0xFF, // mie  16
   23                  0x8C,  // P  17
-  24                  0x8F  // -  18
+  24                  0xBF  // -  18
   25          };
   26          
   27          void Nixie_Display(unsigned char Location, unsigned char Value, unsigned char Dot)

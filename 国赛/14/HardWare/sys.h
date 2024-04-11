@@ -10,6 +10,8 @@
 #include "iic.h"
 #include "onewire.h"
 
+extern unsigned int speed;
+extern char Calibration;
 void Init_HC138(unsigned char channel);
 void Init_Sys();
 

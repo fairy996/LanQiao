@@ -1,0 +1,1 @@
+"..\HardWare\ultrasonic.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\HardWare) DEBUG OBJECTEXTEND PRINT(.\Listings\ultrasonic.lst) OBJECT(.\Objects\ultrasonic.obj)

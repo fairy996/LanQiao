@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/markmap-toolbar@0.16.0/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://unpkg.com/d3@7.8.5/dist/d3.min.js"></script><script src="https://unpkg.com/markmap-view@0.16.0/dist/browser/index.js"></script><script src="https://unpkg.com/markmap-toolbar@0.16.0/dist/index.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+            })(() => window.markmap,null,{"content":"第十三届国赛","children":[{"content":"数码管","children":[{"content":"频率界面","children":[{"content":"F 频率（6位，不足6位左侧熄灭）","children":[],"payload":{"lines":"3,4"}},{"content":"单位有HZ和KHZ两种","children":[],"payload":{"lines":"4,5"}},{"content":"<strong>KHZ的小数点位置如何考虑</strong>","children":[],"payload":{"lines":"5,6"}}],"payload":{"lines":"2,6"}},{"content":"湿度界面","children":[{"content":"H 湿度数据","children":[],"payload":{"lines":"7,8"}},{"content":"湿度数据保留整数（2位）","children":[],"payload":{"lines":"8,9"}}],"payload":{"lines":"6,9"}},{"content":"测距界面","children":[{"content":"A 距离","children":[],"payload":{"lines":"10,11"}},{"content":"单位为cm时，为三位显示，位数不足，左侧熄灭","children":[],"payload":{"lines":"11,12"}},{"content":"单位为m时，三位显示，保留小数点后两位","children":[],"payload":{"lines":"12,13"}}],"payload":{"lines":"9,13"}},{"content":"参数界面","children":[{"content":"频率参数","children":[{"content":"P1 频率参数","children":[],"payload":{"lines":"15,16"}},{"content":"频率参数为KHZ，保留小数点后1位","children":[],"payload":{"lines":"16,17"}},{"content":"参数范围为1.0K-12.0K","children":[],"payload":{"lines":"17,18"}}],"payload":{"lines":"14,18"}},{"content":"湿度参数","children":[{"content":"P2 湿度参数","children":[],"payload":{"lines":"19,20"}},{"content":"适度参数为整数，范围为10-60%","children":[],"payload":{"lines":"20,21"}}],"payload":{"lines":"18,21"}},{"content":"距离参数","children":[{"content":"P3 距离参数","children":[],"payload":{"lines":"22,23"}},{"content":"单位为m，保留小数点后1位","children":[],"payload":{"lines":"23,24"}},{"content":"参数范围0.1m-1.2m","children":[],"payload":{"lines":"24,25"}}],"payload":{"lines":"21,25"}}],"payload":{"lines":"13,25"}}],"payload":{"lines":"1,2"}},{"content":"按键(独立按键模式)","children":[{"content":"S4","children":[{"content":"界面切换按键","children":[],"payload":{"lines":"27,28"}},{"content":"频率---&gt;湿度---&gt;测距---&gt;参数---&gt;频率","children":[],"payload":{"lines":"28,29"}}],"payload":{"lines":"26,29"}},{"content":"S5","children":[{"content":"参数界面切换按键，仅在参数界面下有效","children":[],"payload":{"lines":"30,31"}},{"content":"频率参数--&gt;湿度参数---&gt;距离参数","children":[],"payload":{"lines":"31,32"}}],"payload":{"lines":"29,32"}},{"content":"S6","children":[{"content":"加按键","children":[{"content":"频率参数状态下，频率参数+0.5K","children":[],"payload":{"lines":"34,35"}},{"content":"湿度参数状态下，适度参数+10%","children":[],"payload":{"lines":"35,36"}},{"content":"距离参数状态下，距离参数+0.1m","children":[],"payload":{"lines":"36,37"}}],"payload":{"lines":"33,37"}},{"content":"切换","children":[{"content":"在测距界面下切换距离显示单位","children":[],"payload":{"lines":"38,39"}},{"content":"cm---&gt;m---&gt;cm","children":[],"payload":{"lines":"39,40"}}],"payload":{"lines":"37,40"}}],"payload":{"lines":"32,40"}},{"content":"S7","children":[{"content":"减按键","children":[{"content":"频率参数状态下，频率参数-0.5K","children":[],"payload":{"lines":"42,43"}},{"content":"湿度参数状态下，适度参数-10%","children":[],"payload":{"lines":"43,44"}},{"content":"距离参数状态下，距离参数-0.1m","children":[],"payload":{"lines":"44,45"}}],"payload":{"lines":"41,45"}},{"content":"切换","children":[{"content":"在频率界面下，切换频率显示单位","children":[],"payload":{"lines":"46,47"}},{"content":"HZ---&gt;KHZ---&gt;HZ","children":[],"payload":{"lines":"47,48"}}],"payload":{"lines":"45,48"}},{"content":"清零","children":[{"content":"在湿度界面下，长按S7超过1s，清零继电器统计次数","children":[],"payload":{"lines":"49,50"}}],"payload":{"lines":"48,50"}}],"payload":{"lines":"40,50"}},{"content":"注意","children":[{"content":"每次进入频率界面时默认为频率参数","children":[],"payload":{"lines":"51,52"}},{"content":"物极必反，参数同理","children":[],"payload":{"lines":"52,53"}}],"payload":{"lines":"50,53"}}],"payload":{"lines":"25,26"}},{"content":"湿度","children":[{"content":"湿度与电位器所采集到的电压成正比例，湿度 = V / 255 * 100;","children":[],"payload":{"lines":"54,55"}}],"payload":{"lines":"53,54"}},{"content":"DAC输出","children":[{"content":"湿度低于湿度参数时输出1.0V","children":[],"payload":{"lines":"56,57"}},{"content":"湿度高于80%时输出5V","children":[],"payload":{"lines":"57,58"}},{"content":"其间 输出电压 = （湿度 - 湿度参数）* (4 / (80 - 湿度参数)) + 1","children":[],"payload":{"lines":"58,59"}}],"payload":{"lines":"55,56"}},{"content":"LED","children":[{"content":"L1","children":[{"content":"频率界面，L1点亮","children":[],"payload":{"lines":"61,62"}},{"content":"频率参数界面L1以0.1s为间隔闪烁","children":[],"payload":{"lines":"62,63"}}],"payload":{"lines":"60,63"}},{"content":"L2","children":[{"content":"湿度界面，L2点亮","children":[],"payload":{"lines":"64,65"}},{"content":"湿度参数界面L2以0.1s为间隔闪烁","children":[],"payload":{"lines":"65,66"}}],"payload":{"lines":"63,66"}},{"content":"L3","children":[{"content":"测距界面，L3点亮","children":[],"payload":{"lines":"67,68"}},{"content":"测距参数界面L3以0.1s为间隔闪烁","children":[],"payload":{"lines":"68,69"}}],"payload":{"lines":"66,69"}},{"content":"L4","children":[{"content":"频率大于频率参数时，L4点亮","children":[],"payload":{"lines":"70,71"}},{"content":"频率小于频率参数时，L4熄灭","children":[],"payload":{"lines":"71,72"}}],"payload":{"lines":"69,72"}},{"content":"L5","children":[{"content":"湿度大于湿度参数时，L5点亮","children":[],"payload":{"lines":"73,74"}},{"content":"湿度小于湿度参数时，L5熄灭","children":[],"payload":{"lines":"74,75"}}],"payload":{"lines":"72,75"}},{"content":"L6","children":[{"content":"距离大于距离参数时，L6点亮","children":[],"payload":{"lines":"76,77"}},{"content":"距离小于距离参数时，L6熄灭","children":[],"payload":{"lines":"77,78"}}],"payload":{"lines":"75,78"}}],"payload":{"lines":"59,60"}},{"content":"EEPROM","children":[{"content":"统计继电器开关次数，将其保留在E2PROM地址中","children":[],"payload":{"lines":"79,80"}}],"payload":{"lines":"78,79"}},{"content":"继电器","children":[{"content":"测量距离大于距离参数，继电器吸合，否则继电器断开","children":[],"payload":{"lines":"81,82"}}],"payload":{"lines":"80,81"}},{"content":"脉冲输出","children":[{"content":"频率大于频率参数,电机驱动引脚输出1KHZ，占空比为80%的脉冲信号，否则为20%","children":[],"payload":{"lines":"83,84"}}],"payload":{"lines":"82,83"}},{"content":"初始状态","children":[{"content":"频率显示界面","children":[],"payload":{"lines":"85,86"}},{"content":"距离单位cm","children":[],"payload":{"lines":"86,87"}},{"content":"频率单位Hz","children":[],"payload":{"lines":"87,88"}},{"content":"频率参数9k","children":[],"payload":{"lines":"88,89"}},{"content":"湿度参数40%","children":[],"payload":{"lines":"89,90"}},{"content":"距离参数0.6m","children":[],"payload":{"lines":"90,91"}}],"payload":{"lines":"84,85"}}],"payload":{"lines":"0,1"}},{})</script>
+</body>
+</html>
